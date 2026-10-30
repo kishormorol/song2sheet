@@ -98,6 +98,10 @@ def build(notes: list[Note], beats: np.ndarray, downbeats: np.ndarray,
         resid.append(r)
     if not events:
         raise ValueError("No notes fall after the first downbeat.")
+    if min(s for s, _, _ in events) < 0:
+        # pickup notes just before the first downbeat: give them a bar of their own
+        # (music21 cannot place anything before bar 1)
+        events = [(s + per_bar, d, p) for s, d, p in events]
 
     split = PIANO_SPLIT if instrument == "piano" else 0
     score = stream.Score()

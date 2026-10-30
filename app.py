@@ -30,6 +30,12 @@ REPO = "https://github.com/kishormorol/song2sheet"
 models = Models.load(DEVICE)
 
 INSTRUMENTS = {"Piano": "piano", "Guitar": "guitar", "Bass": "bass", "Vocals (melody)": "vocals"}
+EXAMPLES = [  # Wikimedia Commons recordings; see examples/CREDITS.md
+    ["examples/satie-gymnopedie-1.ogg", "Piano", False],
+    ["examples/romance-anonimo.ogg", "Guitar", False],
+    ["examples/tarrega-gran-vals.ogg", "Guitar", False],
+    ["examples/axletree-breezy-may.ogg", "Guitar", True],
+]
 
 
 @gpu(duration=150)
@@ -98,7 +104,9 @@ NOTES = """
 <p class="s2s-note"><b>What works well:</b> solo piano and steady, strummed or picked guitar.
 <b>Still rough:</b> rhythm in free-tempo (rubato) playing, dense full-band mixes, and vocals.
 Tab picks the string from the sound of each note; on held-out GuitarSet players it chooses the right
-string 81% of the time for accompaniment and 72% for solos. Only upload audio you have the rights to.</p>"""
+string 81% of the time for accompaniment and 72% for solos. Only upload audio you have the rights to. Example clips are from Wikimedia Commons:
+Satie by Robin Alciatore (public domain), Romance by Jim Green (CC0), Gran Vals by Joni Ikäläinen
+(public domain), "Breezy May" by Axletree (CC BY 4.0).</p>"""
 
 with gr.Blocks(title="Song2Sheet") as demo:
     gr.HTML(HERO, padding=False)
@@ -117,6 +125,8 @@ with gr.Blocks(title="Song2Sheet") as demo:
     with gr.Row():
         stem = gr.Audio(label="What was transcribed (isolated stem)", interactive=False)
         files = gr.File(label="Downloads: MusicXML (open in MuseScore), MIDI, tab", file_count="multiple")
+    gr.Examples(EXAMPLES, [audio, instrument, isolate], label="Try an example (public domain / CC clips)",
+                cache_examples=False)
     gr.HTML(NOTES, padding=False)
     go.click(convert, [audio, instrument, isolate], [summary, sheet, tab, stem, files])
 

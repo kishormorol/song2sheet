@@ -32,6 +32,15 @@ def test_steady_quarters_become_a_clean_score():
     assert [n.pitch.midi for n in sc.flatten().notes][:3] == [60, 62, 64]
 
 
+def test_pickup_notes_before_the_first_downbeat_are_kept():
+    beats, downs = _beats()
+    spb = 0.5
+    pickup = [Note(beats[4] - 0.2 * spb, beats[4] + 0.5 * spb, 64, 90)]   # just before bar 1
+    sc, info = score.build(pickup + _quarters([60, 62, 64, 65], start_beat=4), beats, downs[1:], "piano")
+    assert info.kept_notes == 5
+    assert 64 in [n.pitch.midi for n in sc.flatten().notes][:2]
+
+
 def test_waltz_meter_is_detected():
     beats, downs = _beats(per_bar=3)
     _, info = score.build(_quarters([67] * 12), beats, downs, "piano")

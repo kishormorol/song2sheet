@@ -6,3 +6,4 @@ out/
 *.ogg
 *.mp3
 .pytest_cache/
+!examples/*.ogg
