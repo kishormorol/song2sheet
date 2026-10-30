@@ -1,0 +1,4 @@
+-r requirements.txt
+torch
+gradio==6.31.0
+pytest==8.3.5
